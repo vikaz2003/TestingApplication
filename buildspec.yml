@@ -4,35 +4,19 @@ phases:
   install:
     runtime-versions:
       java: corretto25
-
   pre_build:
     commands:
-      - echo "Checking build environment"
       - java -version
       - mvn -version
-
   build:
     commands:
-      - echo "Building Spring Boot application"
       - mvn clean package -DskipTests
-
-  post_build:
-  commands:
-    - |
-      JAR_FILE="$(find target -maxdepth 1 -type f -name '*.jar' ! -name '*-plain.jar' | head -n 1)"
-      if [ -z "$JAR_FILE" ]; then
-        echo "No deployable JAR was found"
-        exit 1
-      fi
-      cp "$JAR_FILE" application.jar
-      printf '%s\n' 'web: java -jar application.jar' > Procfile
 
 artifacts:
   files:
-    - application.jar
-    - Procfile
+    - 'target/*.jar'
   discard-paths: yes
 
 cache:
   paths:
-    - "/root/.m2/**/*"
+    - '/root/.m2/**/*'
